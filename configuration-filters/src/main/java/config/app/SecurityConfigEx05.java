@@ -1,4 +1,4 @@
-package config.web;
+package config.app;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,10 +8,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfigEx04 {
+public class SecurityConfigEx05 {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return new WebSecurityCustomizer() {

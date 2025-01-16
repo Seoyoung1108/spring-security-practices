@@ -1,6 +1,7 @@
-package config.web;
+package config.app;
 
 import config.WebConfig;
+import config.app.SecurityConfigEx04;
 import jakarta.servlet.Filter;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

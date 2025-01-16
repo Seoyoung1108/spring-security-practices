@@ -1,4 +1,4 @@
-package config.web;
+package config.app;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfigEx01 {
+public class SecurityConfigEx03 {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return new WebSecurityCustomizer() {

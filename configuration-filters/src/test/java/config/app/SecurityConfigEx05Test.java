@@ -1,17 +1,12 @@
-package config.web;
+package config.app;
 
 import config.WebConfig;
+import config.app.SecurityConfigEx05;
 import jakarta.servlet.Filter;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
-import org.springframework.security.web.authentication.ui.DefaultResourcesFilter;
-import org.springframework.security.web.jaasapi.JaasApiIntegrationFilter;
-import org.springframework.security.web.session.ConcurrentSessionFilter;
-import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -25,23 +20,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes={WebConfig.class, SecurityConfigEx01.class})
+@ContextConfiguration(classes={WebConfig.class, SecurityConfigEx05.class})
 @WebAppConfiguration
-public class SecurityConfigEx01Test {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class SecurityConfigEx05Test {
     private MockMvc mvc;
     private FilterChainProxy filterChainProxy;
 
     @BeforeEach
     public void setup(WebApplicationContext context) {
-        filterChainProxy = (FilterChainProxy) context.getBean("springSecurityFilterChain", Filter.class);
+        filterChainProxy = (FilterChainProxy)context.getBean("springSecurityFilterChain", Filter.class);
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
                 .build();
     }
 }
-

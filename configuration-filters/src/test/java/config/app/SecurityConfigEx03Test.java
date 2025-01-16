@@ -1,6 +1,7 @@
-package config.web;
+package config.app;
 
 import config.WebConfig;
+import config.app.SecurityConfigEx03;
 import jakarta.servlet.Filter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,9 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes={WebConfig.class, SecurityConfigEx02.class})
+@ContextConfiguration(classes={WebConfig.class, SecurityConfigEx03.class})
 @WebAppConfiguration
-public class SecurityConfigEx02Test {
+public class SecurityConfigEx03Test {
     private MockMvc mvc;
     private FilterChainProxy filterChainProxy;
 
@@ -38,4 +39,5 @@ public class SecurityConfigEx02Test {
                 .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
                 .build();
     }
+
 }
