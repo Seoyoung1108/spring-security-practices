@@ -39,4 +39,51 @@ public class SecurityConfigEx04Test {
                 .build();
     }
 
+    @Test
+    @Order(1)
+    public void testSecurityFilterChains() {
+    	List<SecurityFilterChain> securityFilterChains = filterChainProxy.getFilterChains();
+    	assertEquals(2,securityFilterChains.size());
+    }
+    
+    @Test
+    @Order(2)
+    public void testSecurityFilters() {
+    	SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains().getLast();
+    	List<Filter> filters = securityFilterChain.getFilters();
+    	assertEquals(15,filters.size());
+    	
+    	// AuthorizationFilter
+    	assertEquals("AuthorizationFilter", filters.get(14).getClass().getSimpleName());
+    }
+    
+    @Test
+    @Order(3)
+    public void testWebSecurity() throws Throwable {
+    	mvc
+    	.perform(get("/assets/images/logo.svg"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().contentType("image/svg+xml"))
+    	.andDo(print());
+    }
+    
+    @Test
+    @Order(4)
+    public void testPing() throws Throwable {
+    	mvc
+    	.perform(get("/ping"))
+    	.andExpect(status().is3xxRedirection())
+    	.andExpect(redirectedUrl("http://localhost/login"))
+    	.andDo(print());
+    }
+    
+    @Test
+    @Order(5)
+    public void testLogin() throws Throwable {
+    	mvc
+    	.perform(get("/login"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().contentType("text/html;charset=UTF-8"))
+    	.andDo(print());
+    }
 }

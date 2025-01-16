@@ -44,5 +44,39 @@ public class SecurityConfigEx01Test {
                 .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
                 .build();
     }
+    
+    @Test
+    public void testSecurityFilterChains() {
+    	List<SecurityFilterChain> securityFilterChains = filterChainProxy.getFilterChains();
+    	assertEquals(2,securityFilterChains.size());
+    }
+    
+    @Test
+    public void testSecurityFilters() {
+    	SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains().getLast();
+    	List<Filter> filters = securityFilterChain.getFilters();
+    	assertEquals(14,filters.size());
+    	
+    	// UsernamePasswordAuthenticationFilter
+    	assertEquals("UsernamePasswordAuthenticationFilter", filters.get(6).getClass().getSimpleName());
+    }
+    
+    @Test
+    public void testWebSecurity() throws Throwable {
+    	mvc
+    	.perform(get("/assets/images/logo.svg"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().contentType("image/svg+xml"))
+    	.andDo(print());
+    }
+    
+    @Test
+    public void testHttpSecurity() throws Throwable {
+    	mvc
+    	.perform(get("/ping"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().string("pong"))
+    	.andDo(print());
+    }
 }
 

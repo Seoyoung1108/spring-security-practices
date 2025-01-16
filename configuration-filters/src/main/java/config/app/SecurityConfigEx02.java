@@ -26,6 +26,14 @@ public class SecurityConfigEx02 {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    	http
+    	.formLogin((formLogin)->{
+    		//formLogin
+    		//.loginPage("/user/login")
+    		//.usernameParameter("email")
+    		//.loginProcessingUrl("/auth");
+    	})
+    	.httpBasic((httpBasic)->{});
         return http.build();
     }
 }
