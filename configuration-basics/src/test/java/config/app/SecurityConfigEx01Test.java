@@ -1,9 +1,16 @@
-package config.web;
+package config.app;
 
 import jakarta.servlet.Filter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -13,7 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations={"classpath:config/WebConfig.xml", "classpath:config/web/SecurityConfigEx01.xml"})
+@ContextConfiguration(locations={"classpath:config/WebConfig.xml", "classpath:config/app/SecurityConfigEx01.xml"})
 @WebAppConfiguration
 public class SecurityConfigEx01Test {
     private MockMvc mvc;
@@ -26,5 +33,11 @@ public class SecurityConfigEx01Test {
                 .webAppContextSetup(context)
                 .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
                 .build();
+    }
+    
+    @Test
+    public void testSecurityFilterChains() {
+    	List<SecurityFilterChain> securityFilterChains = filterChainProxy.getFilterChains();
+    	assertEquals(2,securityFilterChains.size());
     }
 }

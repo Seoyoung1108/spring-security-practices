@@ -1,4 +1,4 @@
-package config.web;
+package config.app;
 
 import config.WebConfig;
 import jakarta.servlet.Filter;
