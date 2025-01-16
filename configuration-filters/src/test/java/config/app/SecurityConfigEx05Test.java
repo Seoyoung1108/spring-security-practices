@@ -38,4 +38,64 @@ public class SecurityConfigEx05Test {
                 .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
                 .build();
     }
+    
+    @Test
+    @Order(1)
+    public void testSecurityFilterChains() {
+    	List<SecurityFilterChain> securityFilterChains = filterChainProxy.getFilterChains();
+    	assertEquals(2,securityFilterChains.size());
+    }
+    
+    @Test
+    @Order(2)
+    public void testSecurityFilters() {
+    	SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains().getLast();
+    	List<Filter> filters = securityFilterChain.getFilters();
+    	assertEquals(12,filters.size());
+    	
+    	// All Filter
+    	for(Filter filter: filters) {
+    		System.out.println(filter.getClass().getSimpleName());
+    	}
+    }
+    
+    @Test
+    @Order(3)
+    public void testWebSecurity() throws Throwable {
+    	mvc
+    	.perform(get("/assets/images/logo.svg"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().contentType("image/svg+xml"))
+    	.andDo(print());
+    }
+    
+    @Test
+    @Order(4)
+    public void testNotAuthenticated() throws Throwable {
+    	mvc
+    	.perform(get("/ping"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().string("pong"))
+    	.andDo(print());
+    }
+    
+    @Test
+    @Order(5)
+    public void testAuthenticated() throws Throwable {
+    	mvc
+    	.perform(get("/board/write"))
+    	.andExpect(status().is3xxRedirection())
+    	.andExpect(redirectedUrl("http://localhost/user/login"))
+    	.andDo(print());
+    }
+    
+    @Test
+    @Order(6)
+    public void testLoginPage() throws Throwable {
+    	mvc
+    	.perform(get("/user/login"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().string("this is login form"))
+    	.andDo(print());
+    }
 }

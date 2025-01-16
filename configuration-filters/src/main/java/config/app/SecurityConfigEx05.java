@@ -27,6 +27,19 @@ public class SecurityConfigEx05 {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    	http
+    	.formLogin((formLogin)->{
+    		formLogin.loginPage("/user/login");
+    	})
+    	.authorizeHttpRequests((authorizeRequests)->{
+    		/* Access Control List(ACL) -> 꼭 해야 함. */
+    		authorizeRequests
+    		.requestMatchers(new RegexRequestMatcher("^/board/?(write|delete|modify|reply).*$",null))
+    		//.hasAnyRole("ADMIN","USER")
+    		.authenticated()
+    		.anyRequest().permitAll(); // 나머지 request는 허용
+    	});
+    
         return http.build();
     }
 }
