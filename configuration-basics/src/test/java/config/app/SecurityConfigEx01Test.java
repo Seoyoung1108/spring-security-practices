@@ -3,6 +3,10 @@ package config.app;
 import jakarta.servlet.Filter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 
@@ -39,5 +43,40 @@ public class SecurityConfigEx01Test {
     public void testSecurityFilterChains() {
     	List<SecurityFilterChain> securityFilterChains = filterChainProxy.getFilterChains();
     	assertEquals(2,securityFilterChains.size());
+    }
+    
+    @Test
+    public void testSecurityFilterChain01() {
+    	SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains().getFirst();
+    	assertEquals(0,securityFilterChain.getFilters().size());
+    }
+
+    @Test
+    public void testSecurityFilterChain02() {
+    	SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains().getLast();
+    	List<Filter> filters = securityFilterChain.getFilters();
+    	assertEquals(16,filters.size());
+    	
+    	for(Filter filter: filters) {
+    		System.out.println(filter.getClass().getSimpleName());
+    	}
+    }
+    
+    @Test
+    public void testAssets() throws Throwable {
+    	mvc
+    	.perform(get("/assets/images/logo.svg"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().contentType("image/svg+xml"))
+    	.andDo(print());
+    }
+    
+    @Test
+    public void testHello() throws Throwable {
+    	mvc
+    	.perform(get("/ping"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().string("pong"))
+    	.andDo(print());
     }
 }
