@@ -5,6 +5,7 @@ import config.app.SecurityConfigEx03;
 import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -42,5 +44,41 @@ public class SecurityConfigEx03Test {
                 .webAppContextSetup(applicationContext)
                 .addFilter(new DelegatingFilterProxy(filterChainProxy), "/*")
                 .build();
+    }
+    
+    @Test
+    public void testSecurityFilterChains() {
+    	List<SecurityFilterChain> securityFilterChains = filterChainProxy.getFilterChains();
+    	assertEquals(2,securityFilterChains.size());
+    }
+    
+    @Test
+    public void testSecurityFilterChain01() {
+    	SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains().getFirst();
+    	assertEquals(0,securityFilterChain.getFilters().size());
+    }
+
+    @Test
+    public void testSecurityFilterChain02() {
+    	SecurityFilterChain securityFilterChain = filterChainProxy.getFilterChains().getLast();
+    	assertEquals(3,securityFilterChain.getFilters().size());
+    }
+    
+    @Test
+    public void testAssets() throws Throwable {
+    	mvc
+    	.perform(get("/assets/images/logo.svg"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().contentType("image/svg+xml"))
+    	.andDo(print());
+    }
+    
+    @Test
+    public void testHello() throws Throwable {
+    	mvc
+    	.perform(get("/hello"))
+    	.andExpect(status().isOk())
+    	.andExpect(content().string("world"))
+    	.andDo(print());
     }
 }
